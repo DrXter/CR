@@ -1,0 +1,12 @@
+services:
+  gwreview:
+    build: .
+    env_file: .env
+    ports: ["127.0.0.1:8080:8080"]   # put a TLS reverse proxy (nginx, Caddy, ALB) in front; do not expose plain HTTP
+    volumes: ["gwdata:/data"]
+    restart: unless-stopped
+    read_only: false
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+volumes:
+  gwdata:

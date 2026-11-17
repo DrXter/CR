@@ -1,0 +1,21 @@
+[Unit]
+Description=gwreview Guidewire review workbench
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=gwreview
+Group=gwreview
+WorkingDirectory=/opt/gwreview
+EnvironmentFile=/etc/gwreview/gwreview.env
+ExecStart=/opt/gwreview/venv/bin/python -m app
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/gwreview /opt/gwreview
+
+[Install]
+WantedBy=multi-user.target

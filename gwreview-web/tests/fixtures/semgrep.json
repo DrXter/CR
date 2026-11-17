@@ -1,0 +1,1 @@
+{"results":[{"check_id":"java.lang.security.audit.xxe","path":"src/X.java","start":{"line":9},"extra":{"message":"XXE","severity":"ERROR"}}]}

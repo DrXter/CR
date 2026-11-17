@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>gwreview: sign in</title><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<div class="top"><div class="brand">gw<span>review</span> sign-in</div><div class="sp"></div><span id="st" class="hint" style="color:#fff"></span></div>
+<main>
+<div class="card">
+  <div class="hint">Sign in to the application below as you normally would (password, Okta, MFA). When you are back on the application, the session is captured automatically and this tab can be closed. Click inside the view, then type.</div>
+  <div class="tools"><button class="b" id="cap" disabled>Capture now</button><button class="s" id="can">Cancel</button><span id="msg"></span></div>
+  <canvas class="view" id="v" width="1280" height="800" tabindex="0"></canvas>
+</div>
+</main>
+<script src="/static/auth.js"></script>
+</body></html>

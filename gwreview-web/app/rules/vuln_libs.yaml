@@ -1,0 +1,17 @@
+# Curated starter list of well-known vulnerable library versions. NOT a full vulnerability database:
+# run osv-scanner (enabled in the scan options when installed) for complete coverage.
+maven:
+  "org.apache.logging.log4j:log4j-core": {fixed: "2.17.1", cve: "CVE-2021-44228, CVE-2021-45046, CVE-2021-45105, CVE-2021-44832", note: "Log4Shell family. Java 8 fix line is 2.17.1."}
+  "org.apache.commons:commons-text": {fixed: "1.10.0", cve: "CVE-2022-42889", note: "Text4Shell"}
+  "org.yaml:snakeyaml": {fixed: "2.0", cve: "CVE-2022-1471", note: "Unsafe deserialisation by default"}
+  "org.springframework:spring-core": {fixed: "5.3.18", cve: "CVE-2022-22965", note: "Spring4Shell (5.2.x fix is 5.2.20)"}
+  "com.thoughtworks.xstream:xstream": {fixed: "1.4.20", cve: "CVE-2022-41966", note: "Denial of service / deserialisation"}
+  "commons-collections:commons-collections": {fixed: "3.2.2", cve: "CVE-2015-6420", note: "Deserialisation gadget chain"}
+  "com.alibaba:fastjson": {fixed: "1.2.83", cve: "CVE-2022-25845", note: "Deserialisation"}
+  "com.h2database:h2": {fixed: "2.1.210", cve: "CVE-2021-42392", note: "JNDI remote code execution"}
+npm:
+  "lodash": {fixed: "4.17.21", cve: "CVE-2021-23337, CVE-2020-8203", note: "Prototype pollution / command injection"}
+  "minimist": {fixed: "1.2.6", cve: "CVE-2021-44906", note: "Prototype pollution"}
+  "axios": {fixed: "0.21.2", cve: "CVE-2021-3749", note: "ReDoS"}
+  "jsonwebtoken": {fixed: "9.0.0", cve: "CVE-2022-23529", note: "Insecure key handling"}
+  "node-fetch": {fixed: "2.6.7", cve: "CVE-2022-0235", note: "Credential leak on redirect"}

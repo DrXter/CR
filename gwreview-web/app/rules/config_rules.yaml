@@ -1,0 +1,22 @@
+# Rules for exported configuration (config.xml, server.xml, web.xml, JVM start scripts, ...).
+# NOTE: parameter names and defaults differ by Guidewire release. Confirm against the Configuration Guide.
+# type: param    -> value of an XML <param name=.. value=..>, a key=value line or a -Dkey=value flag
+#       absent   -> regex must NOT appear in files matching `files`   (FAIL if found)
+#       present  -> regex must appear in files matching `files`       (FAIL if the files exist but regex is missing)
+#       version_lt -> regex group 1 is a version; FAIL if lower than `than`
+policy:
+  session_timeout_minutes: 30
+rules:
+  - {id: CFG-R01, name: gw.server.mode is prod, type: param, param: gw.server.mode, op: eq, expected: prod, control: GW-CFG-001}
+  - {id: CFG-R02, name: Idle session timeout within policy, type: param, param: SessionTimeoutMins, op: le, expected: "{policy.session_timeout_minutes}", control: GW-WEB-001}
+  - {id: CFG-R03, name: No remote debug (JDWP) flags, type: absent, files: ['*'], regex: '(?i)(-agentlib:jdwp|-Xrunjdwp)', control: GW-CFG-003}
+  - {id: CFG-R04, name: JMX without authentication or TLS, type: absent, files: ['*'], regex: '(?i)jmxremote\.(authenticate|ssl)\s*=\s*false', control: GW-CFG-012}
+  - {id: CFG-R05, name: Key or trust store password in start script, type: absent, files: ['*'], regex: '-Djavax\.net\.ssl\.(trustStore|keyStore)Password=\S+', control: GW-CFG-012}
+  - {id: CFG-R06, name: AJP connector enabled, type: absent, files: ['server.xml'], regex: '<Connector[^>]*protocol\s*=\s*"AJP', control: GW-PLT-010}
+  - {id: CFG-R07, name: Tomcat shutdown port active, type: absent, files: ['server.xml'], regex: '<Server[^>]*\bport\s*=\s*"(?!-1")\d+"', control: GW-PLT-011}
+  - {id: CFG-R08, name: Users defined in tomcat-users.xml, type: absent, files: ['tomcat-users.xml'], regex: '<user\s', control: GW-PLT-014}
+  - {id: CFG-R09, name: Plaintext password in database-config.xml, type: absent, files: ['database-config.xml'], regex: '(?i)password\s*=\s*"(?![$#{])[^"]+"', control: GW-CFG-010, secret: true}
+  - {id: CFG-R10, name: Log4j-core version, type: version_lt, files: ['*'], regex: 'log4j-core-(\d+\.\d+(?:\.\d+)?)', than: '2.17.1', control: GW-LOG-002}
+  - {id: CFG-R11, name: web.xml cookie Secure flag, type: present, files: ['web.xml'], regex: '<secure>\s*true\s*</secure>', control: GW-WEB-004}
+  - {id: CFG-R12, name: web.xml cookie HttpOnly flag, type: present, files: ['web.xml'], regex: '<http-only>\s*true\s*</http-only>', control: GW-WEB-004}
+  - {id: CFG-R13, name: SameSite cookie setting, type: present, files: ['context.xml'], regex: '(?i)sameSiteCookies\s*=\s*"(strict|lax)"', control: GW-WEB-004}
