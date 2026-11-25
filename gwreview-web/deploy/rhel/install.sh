@@ -20,7 +20,7 @@ if [[ -z $PY ]]; then dnf install -y python3.11 python3.11-pip python3.11-devel 
 echo "using $($PY --version)"
 
 echo "== Chromium system libraries"
-dnf install -y --setopt=strict=0 nss nspr atk at-spi2-atk at-spi2-core cups-libs libdrm libxkbcommon libXcomposite libXdamage libXfixes libXrandr libXext libX11 libxcb \
+dnf install -y --setopt=strict=0 libatomic nss nspr atk at-spi2-atk at-spi2-core cups-libs libdrm libxkbcommon libXcomposite libXdamage libXfixes libXrandr libXext libX11 libxcb \
   mesa-libgbm alsa-lib pango cairo glib2 dbus-libs expat fontconfig freetype liberation-fonts policycoreutils-python-utils curl tar unzip
 
 echo "== user, folders"
