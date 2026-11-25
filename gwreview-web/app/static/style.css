@@ -1,0 +1,33 @@
+:root{--g:#86BC25;--dg:#2E7D32;--k:#000;--bg:#f5f6f7;--line:#d6d9dc;--txt:#111;--mut:#5f6770;--red:#c62828;--amb:#b26a00}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--line:#34383d;--txt:#ececec;--mut:#9aa3ad}.card,.top,input,select,textarea{background:#1e2124!important;color:var(--txt)!important}th{background:#000!important}}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 "Open Sans",Arial,sans-serif;background:var(--bg);color:var(--txt)}
+.top{display:flex;align-items:center;gap:14px;background:#000;color:#fff;padding:0 18px;height:52px;border-bottom:4px solid var(--g)}
+.top .brand{font-weight:700;font-size:16px}.top .brand span{color:var(--g)}.top select{max-width:300px}.sp{flex:1}
+.nav{display:flex;gap:2px;background:#fff;border-bottom:1px solid var(--line);padding:0 12px;overflow-x:auto}
+.nav button{border:0;background:none;padding:12px 14px;cursor:pointer;font:inherit;color:var(--mut);border-bottom:3px solid transparent}
+.nav button.on{color:var(--txt);border-bottom-color:var(--g);font-weight:600}
+main{max-width:1280px;margin:0 auto;padding:18px 16px 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px;margin-bottom:16px}
+h2{margin:0 0 10px;font-size:17px}h3{margin:14px 0 6px;font-size:14px}
+label{display:block;font-weight:600;margin:10px 0 3px;font-size:12px;color:var(--mut)}
+input,select,textarea{width:100%;padding:8px 9px;border:1px solid var(--line);border-radius:4px;font:inherit;background:#fff;color:var(--txt)}
+textarea{min-height:70px;font-family:Consolas,monospace;font-size:12px}
+input[type=checkbox]{width:auto;margin-right:6px}.chk{display:flex;align-items:center;font-weight:400;color:var(--txt);margin:6px 0}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+button.b{background:var(--g);color:#000;border:0;border-radius:4px;padding:9px 16px;font:inherit;font-weight:700;cursor:pointer}
+button.b:hover{filter:brightness(.95)}button.b:disabled{opacity:.5;cursor:default}
+button.s{background:#fff;border:1px solid var(--line);border-radius:4px;padding:7px 12px;font:inherit;cursor:pointer;color:var(--txt)}
+button.stop{background:var(--red);color:#fff;border:0;border-radius:4px;padding:7px 14px;font-weight:700;cursor:pointer}
+.hint{color:var(--mut);font-size:12px;margin:4px 0}.warn{background:#fff4e0;border:1px solid #f0c36b;border-radius:4px;padding:8px 10px;margin:10px 0;font-size:12px;color:#5a3b00}
+.err{color:var(--red);margin:8px 0;font-weight:600}.ok{color:var(--dg);font-weight:600}
+table{border-collapse:collapse;width:100%}th{background:#000;color:#fff;text-align:left;padding:6px 8px;font-size:12px}td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:top;font-size:12px;word-break:break-word}
+.pill{display:inline-block;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:700}
+.PASS{background:#c6efce;color:#14532d}.FAIL{background:#ffc7ce;color:#7f1d1d}.CANDIDATE{background:#ffe699;color:#5a3b00}.INFO{background:#ddebf7;color:#0b3a66}.MANUAL{background:#ffeb9c;color:#5a4300}.ERROR{background:#f4b084;color:#4a1f00}
+.bar{height:10px;background:var(--line);border-radius:5px;overflow:hidden}.bar>div{height:100%;background:var(--g);width:0}
+pre.log{background:#0d0f10;color:#c8e6a0;padding:10px;border-radius:4px;max-height:200px;overflow:auto;font-size:11px;white-space:pre-wrap}
+canvas.view{width:100%;max-width:1280px;border:2px solid var(--line);border-radius:4px;background:#222;cursor:default;outline:none;display:block}
+canvas.view:focus{border-color:var(--g)}
+.grid2{display:grid;grid-template-columns:2fr 1fr;gap:16px}@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.stat{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 14px;min-width:90px}.stat b{display:block;font-size:20px}
+.login{max-width:360px;margin:12vh auto}.tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.tools input,.tools select{width:auto}
+.tag{background:var(--g);color:#000;border-radius:3px;padding:1px 6px;font-size:11px;font-weight:700}
