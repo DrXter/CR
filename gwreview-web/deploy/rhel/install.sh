@@ -5,9 +5,37 @@ set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Run as root (sudo)."; exit 1; }
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 APP=/opt/gwreview; DATA=/var/lib/gwreview; ETC=/etc/gwreview; PW=/opt/gwreview/pw
-PORT=8080; NGINX=1; HOST="$(hostname -f 2>/dev/null || hostname)"
+PORT=8080; NGINX=1; DATADIR=""; HOST="$(hostname -f 2>/dev/null || hostname)"
 while [[ $# -gt 0 ]]; do case $1 in
-  --no-nginx) NGINX=0;; --port) PORT=$2; shift;; --hostname) HOST=$2; shift;; *) echo "Unknown option $1"; exit 1;; esac; shift; done
+  --no-nginx) NGINX=0;; --port) PORT=$2; shift;; --hostname) HOST=$2; shift;; --datadir) DATADIR=${2%/}; shift;; *) echo "Unknown option $1"; exit 1;; esac; shift; done
+
+
+echo "== disk space"
+dnf clean all >/dev/null 2>&1 || true; journalctl --vacuum-size=100M >/dev/null 2>&1 || true; rm -rf /root/.cache/pip
+ROOT_FREE_KB=$(df -Pk / | awk 'NR==2{print $4}'); NEED_KB=3145728     # 3 GB for Chromium, libraries, virtualenv
+if [[ -z $DATADIR && $ROOT_FREE_KB -lt $NEED_KB ]]; then
+  # pick the real disk (xfs/ext4/btrfs) with the most free space, ignoring / /boot docker snap and tmpfs mounts
+  DATADIR=$(df -Pk -T 2>/dev/null | awk 'NR>1 && ($2=="xfs"||$2=="ext4"||$2=="ext3"||$2=="btrfs") && $7!="/" && $7!~/^\/boot/ && $7!~/^\/var\/lib\/(docker|snapd)/ && $5>=5242880 {print $5, $7}' | sort -rn | head -1 | awk '{print $2}')
+  [[ -n $DATADIR ]] && echo "/ has only $((ROOT_FREE_KB/1024)) MB free; using $DATADIR instead." \
+    || { echo "/ has only $((ROOT_FREE_KB/1024)) MB free and no other disk with 5 GB free was found. Free space or pass --datadir /path."; exit 1; }
+fi
+if [[ -n $DATADIR ]]; then
+  [[ -d $DATADIR ]] || { echo "$DATADIR does not exist."; exit 1; }
+  echo "== relocating app and data to $DATADIR (bind mounts)"
+  systemctl stop gwreview 2>/dev/null || true
+  shopt -s dotglob nullglob
+  for pair in "$APP:$DATADIR/gwreview" "$DATA:$DATADIR/gwreview-data"; do
+    tgt=${pair%%:*}; src=${pair#*:}; mkdir -p "$src" "$tgt"
+    if ! mountpoint -q "$tgt"; then
+      files=("$tgt"/*); [[ ${#files[@]} -gt 0 ]] && mv "${files[@]}" "$src"/    # keep anything an earlier run left on /
+      mount --bind "$src" "$tgt"
+    fi
+    grep -qs " $tgt " /etc/fstab || echo "$src $tgt none bind 0 0" >> /etc/fstab
+  done
+  shopt -u dotglob nullglob; systemctl daemon-reload
+  df -h "$APP" | tail -1
+fi
+[[ $(df -Pk / | awk 'NR==2{print $4}') -ge 102400 || -n $DATADIR ]] || { echo "Less than 100 MB free on /. Free space first."; exit 1; }
 
 . /etc/os-release
 echo "== RHEL family $VERSION_ID"
@@ -54,6 +82,7 @@ install -m 644 "$SRC/deploy/rhel/gwreview.service" /etc/systemd/system/gwreview.
 systemctl daemon-reload; systemctl enable --now gwreview
 
 echo "== SELinux labels"
+if [[ -n $DATADIR ]]; then semanage fcontext -a -e /opt/gwreview "$DATADIR/gwreview" 2>/dev/null || true; semanage fcontext -a -e /var/lib/gwreview "$DATADIR/gwreview-data" 2>/dev/null || true; restorecon -R "$DATADIR/gwreview" "$DATADIR/gwreview-data" 2>/dev/null || true; fi
 restorecon -R $APP $DATA 2>/dev/null || true
 
 if [[ $NGINX -eq 1 ]]; then

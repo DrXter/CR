@@ -15,6 +15,8 @@ The first-start password is printed in the log unless you set `GWR_ADMIN_PASSWOR
     sudo bash deploy/rhel/install.sh            # nginx + TLS on 443, systemd service, SELinux, firewalld
     sudo bash deploy/rhel/install.sh --no-nginx # loopback only; use an SSH tunnel
 
+If `/` is nearly full (common on shared pentest boxes), the script moves the app to the roomiest disk by itself (bind mounts plus fstab and SELinux labels), or use `--datadir /datadisk`.
+
 Installs Python 3.11, the Chromium libraries, a `gwreview` service user, `/etc/gwreview/gwreview.env` (admin password inside), and starts `gwreview.service`. Logs: `journalctl -u gwreview -f`. The script was written to the RHEL documentation but not run on a RHEL host here.
 
 ## Quick Audit (default screen)
